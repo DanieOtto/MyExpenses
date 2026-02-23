@@ -1,0 +1,19 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Start Expo (run + attach)",
+      "type": "reactnative",
+      "request": "launch",
+      "platform": "exponent",
+      "cwd": "${workspaceFolder}",
+      "preLaunchTask": "expo:start"
+    },
+    {
+      "name": "Attach to Packager",
+      "type": "reactnative",
+      "request": "attach",
+      "cwd": "${workspaceFolder}"
+    }
+  ]
+}
