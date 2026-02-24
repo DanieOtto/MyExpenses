@@ -9,7 +9,7 @@ export default function Index() {
             alignItems: "center",
         }}
         >
-            <Text>Income</Text>
+            <Text>Income screen</Text>
         </View>
     )
 }
