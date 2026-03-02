@@ -1,10 +1,10 @@
 import { View, Text, StyleSheet } from "react-native";
 
-export default function TrendsScreen() {
+export default function IncomeScreen() {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Trends</Text>
-      <Text>Put charts / month-over-month summaries here.</Text>
+      <Text style={styles.title}>Income</Text>
+      <Text>Put your income sources / entries here.</Text>
     </View>
   );
 }
