@@ -1,6 +1,6 @@
 import React, {createContext, useContext, useEffect, useState} from 'react';
 import * as SecureStore from 'expo-secure-store';
-import api from '../api';
+import api from '../config/api';
 
 type AuthState = { accessToken: string | null; refreshToken?: string | null; user?: any };
 const AuthContext = createContext<any>(null);
@@ -21,7 +21,7 @@ export const AuthProvider: React.FC<{children:any}> = ({children}) => {
   }, []);
 
   const signIn = async (email: string, password: string) => {
-    const resp = await api.post('/auth/login', { email, password });
+    const resp = await api.post('/api/auth/login', { email, password });
     const { token } = resp.data;
     await SecureStore.setItemAsync('accessToken', token);
     api.defaults.headers.common['Authorization'] = `Bearer ${token}`;

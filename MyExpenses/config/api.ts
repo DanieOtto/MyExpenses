@@ -1,8 +1,7 @@
 import axios from "axios";
-
 const api = axios.create({
-  baseURL: "https://your-api.example.com", // TODO: Replace with your backend URL
+  baseURL:
+    "https://manualexpesetracker-b7aaevhkgjgtfbb2.southafricanorth-01.azurewebsites.net",
   headers: { "Content-Type": "application/json" },
 });
-
 export default api;
