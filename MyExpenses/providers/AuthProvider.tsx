@@ -7,6 +7,9 @@ const AuthContext = createContext<any>(null);
 
 export const AuthProvider: React.FC<{children:any}> = ({children}) => {
   const [state, setState] = useState<AuthState>({accessToken: null, refreshToken: null, user: null});
+  React.useEffect(() => {
+    console.log('AuthProvider: state changed', state);
+  }, [state]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -15,17 +18,25 @@ export const AuthProvider: React.FC<{children:any}> = ({children}) => {
       if (accessToken) {
         api.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
         setState({ accessToken, refreshToken: null, user: null });
+        console.log('AuthProvider: accessToken loaded from SecureStore', accessToken);
       }
       setLoading(false);
     })();
   }, []);
 
   const signIn = async (email: string, password: string) => {
-    const resp = await api.post('/api/auth/login', { email, password });
-    const { token } = resp.data;
-    await SecureStore.setItemAsync('accessToken', token);
-    api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    setState({ accessToken: token, refreshToken: null, user: null });
+    try {
+      const resp = await api.post('/api/auth/login', { username: email, password });
+      let token = resp.data.result;
+      if (typeof token !== 'string') {
+        token = String(token);
+      }
+      await SecureStore.setItemAsync('accessToken', token);
+      api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      setState({ accessToken: token, refreshToken: null, user: null });
+    } catch (error) {
+      throw error;
+    }
   };
 
   const signOut = async () => {
@@ -34,10 +45,9 @@ export const AuthProvider: React.FC<{children:any}> = ({children}) => {
     setState({ accessToken: null, refreshToken: null, user: null });
   };
 
-  // Register method for new users
   const register = async (email: string, password: string) => {
     const resp = await api.post('/auth/register', { email, password });
-    const { token } = resp.data;
+    const { token } = resp.data.result;
     await SecureStore.setItemAsync('accessToken', token);
     api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     setState({ accessToken: token, refreshToken: null, user: null });

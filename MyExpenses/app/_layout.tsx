@@ -5,6 +5,9 @@ import { View, ActivityIndicator } from 'react-native';
 
 function AuthGate() {
   const auth = useAuth();
+  React.useEffect(() => {
+    console.log('AuthGate: auth state', auth);
+  }, [auth]);
   if (auth.loading) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
