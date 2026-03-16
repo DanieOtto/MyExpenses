@@ -1,10 +1,28 @@
 import React from 'react';
-import { Stack } from 'expo-router';
+import { Stack, useRouter, useSegments } from 'expo-router';
 import { AuthProvider, useAuth } from '../providers/AuthProvider';
 import { View, ActivityIndicator } from 'react-native';
 
 function AuthGate() {
   const auth = useAuth();
+  const router = useRouter();
+  const segments = useSegments();
+
+  React.useEffect(() => {
+    if (auth.loading) return;
+
+    const inAuthRoute = segments[0] === 'auth';
+
+    if (!auth.accessToken && !inAuthRoute) {
+      router.replace('/auth/Login');
+      return;
+    }
+
+    if (auth.accessToken && inAuthRoute) {
+      router.replace('/(tabs)/expenses');
+    }
+  }, [auth.loading, auth.accessToken, segments, router]);
+
   React.useEffect(() => {
     console.log('AuthGate: auth state', auth);
   }, [auth]);
@@ -15,16 +33,10 @@ function AuthGate() {
       </View>
     );
   }
-  if (!auth.accessToken) {
-    return (
-      <Stack>
-        <Stack.Screen name="auth/Login" options={{ title: 'Login' }} />
-        <Stack.Screen name="auth/Register" options={{ title: 'Register' }} />
-      </Stack>
-    );
-  }
   return (
     <Stack>
+      <Stack.Screen name="auth/Login" options={{ title: 'Login' }} />
+      <Stack.Screen name="auth/Register" options={{ title: 'Register' }} />
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
     </Stack>
   );
